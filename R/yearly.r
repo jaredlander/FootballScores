@@ -2,15 +2,17 @@
 require(RCurl)
 require(XML)
 require(plyr)
-tester <- RCurl::getURL(url="http://www.pro-football-reference.com/years/2010/games.htm")
 
 years <- 1940:2010
 
 getBoxURL <- function(theYear)
 {
+    # build the URL
     theURL <- sprintf("http://www.pro-football-reference.com/years/%s/games.htm", theYear)
+    # get the page
     thePage <- RCurl::getURL(url=theURL)
     
+    # Find all links to boxscores
     boxes <- str_extract_all(string=thePage, pattern="boxscores/[0-9]{9}[a-z]{3}\\.htm")[[1]]
     
     return(data.frame(Year=theYear, URL=boxes))
