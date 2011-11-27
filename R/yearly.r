@@ -13,8 +13,9 @@ getBoxURL <- function(theYear)
     
     boxes <- str_extract_all(string=thePage, pattern="boxscores/[0-9]{9}[a-z]{3}\\.htm")[[1]]
     
-    return(data.frame(URL=boxes))
+    return(data.frame(Year=theYear, URL=boxes))
 }
 
 system.time(allYears <- adply(years, 1, getBoxURL))
-allYears
+
+write.table(allYears, "C:/users/Jared/FootballScores/csv/YearlyBoxscores.csv", sep=",", row.names=FALSE)
