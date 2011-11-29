@@ -15,5 +15,5 @@ head(allGames)
 allGames <- allGames[allGames$Season >= 1991, ]
 
 # histograms
-ggplot(data=allGames, aes(x=Final)) + geom_histogram() + facet_wrap(~Season) + opts(title="Distribution of Scores by Season")
+ggplot(data=allGames, aes(x=Final)) + geom_histogram() + facet_wrap(~Season) + opts(title="Distribution of Scores by Season", axis.text.x=theme_text(angle=90))
 ggplot(data=allGames, aes(x=Final%%10)) + geom_histogram() + facet_wrap(~Season) + opts(title="Distribution of Last Digit of Score by Season")
