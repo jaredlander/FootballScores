@@ -11,12 +11,17 @@ allYears <- allYears[allYears$Year >= 1990, c("Year", "URL")]
 gameFiles <- sub("boxscores/", "", allYears$URL)
 gameFiles <- sprintf("C:/users/Jared/FootballScores/objects/%s.RData", gameFiles)
 
-AllGameInfo <- alply(gameFiles, 1, function(x) { load(x); print(x);BuildGameInfo(thePage) })
-load("C:/users/Jared/FootballScores/objects/199509030gnb.htm.RData")
-BuildGameInfo(thePage)
-theInfo <- str_extract_all(string=thePage, pattern=">[A-Za-z0-9 ]*</a> \\([0-9]+-[0-9]+-[0-9]+\\)</td><td align=\"right\">[0-9]{1,3}</td><td align=\"right\">[0-9]{1,3}</td><td align=\"right\">[0-9]{1,3}</td><td align=\"right\">[0-9]{1,3}</td><td align=\"right\">[0-9]{1,3}</td>(<td align=\"right\">[0-9]{1,3}</td>)*")[[1]]
-theInfo
-#theTeams <- unlist(str_extract_all(string=theInfo, pattern=">[A-Za-z ]*</a>"))
+# put all of the boxscores into data.frames in a list
+allGameInfo <- alply(gameFiles, 1, function(x) { load(x); print(x);BuildGameInfo(thePage) })
+# save as an RData file
+save(allGameInfo, file="C:/users/Jared/FootballScores/objects/AllGames.RData")
+
+# convert to a data.frame, probably could do this with the step above
+allGames <- ldply(AllGameInfo)
+
+# write to a csv
+write.table(allGames, "C:/users/Jared/FootballScores/csv/AllGames.csv", sep=",", row.names=FALSE)
+
 BuildGameInfo <- function(gamePage)
 {
     # extract boxscore info
