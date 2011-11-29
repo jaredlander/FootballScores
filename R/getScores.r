@@ -17,7 +17,7 @@ allGameInfo <- alply(gameFiles, 1, function(x) { load(x); print(x);BuildGameInfo
 save(allGameInfo, file="C:/users/Jared/FootballScores/objects/AllGames.RData")
 
 # convert to a data.frame, probably could do this with the step above
-allGames <- ldply(AllGameInfo)
+allGames <- ldply(allGameInfo)
 
 # write to a csv
 write.table(allGames, "C:/users/Jared/FootballScores/csv/AllGames.csv", sep=",", row.names=FALSE)
