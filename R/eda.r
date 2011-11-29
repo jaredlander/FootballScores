@@ -9,11 +9,12 @@ allGames <- read.table("C:/users/Jared/FootballScores/csv/AllGames.csv", sep=","
 allGames$Year <- year(allGames$Date)
 # include game in January and February as part of the previous year's season
 allGames$Season <- ifelse(month(allGames$Date) <= 2, allGames$Year - 1, allGames$Year)
+allGames$Home <- ifelse(rowMeans(row(allGames)) %% 2 == 0, "Home", "Away")
 head(allGames)
 
 # only take 1991 and beyond to make it an even 20 years
 allGames <- allGames[allGames$Season >= 1991, ]
 
 # histograms
-ggplot(data=allGames, aes(x=Final)) + geom_histogram() + facet_wrap(~Season) + opts(title="Distribution of Scores by Season", axis.text.x=theme_text(angle=90))
+ggplot(data=allGames, aes(x=Final, fill=Home)) + geom_histogram() + facet_wrap(~Season) + opts(title="Distribution of Scores by Season", axis.text.x=theme_text(angle=90))
 ggplot(data=allGames, aes(x=Final%%10)) + geom_histogram() + facet_wrap(~Season) + opts(title="Distribution of Last Digit of Score by Season")
