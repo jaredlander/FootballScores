@@ -12,7 +12,7 @@ gameFiles <- sub("boxscores/", "", allYears$URL)
 gameFiles <- sprintf("C:/users/Jared/FootballScores/objects/%s.RData", gameFiles)
 
 AllGameInfo <- alply(gameFiles, 1, function(x) { load(x); print(x);BuildGameInfo(thePage) })
-load("C:/users/Jared/FootballScores/objects/199012160cle.htm.RData")
+load("C:/users/Jared/FootballScores/objects/199509030gnb.htm.RData")
 BuildGameInfo(thePage)
 theInfo <- str_extract_all(string=thePage, pattern=">[A-Za-z0-9 ]*</a> \\([0-9]+-[0-9]+-[0-9]+\\)</td><td align=\"right\">[0-9]{1,3}</td><td align=\"right\">[0-9]{1,3}</td><td align=\"right\">[0-9]{1,3}</td><td align=\"right\">[0-9]{1,3}</td><td align=\"right\">[0-9]{1,3}</td>(<td align=\"right\">[0-9]{1,3}</td>)*")[[1]]
 theInfo
@@ -20,10 +20,10 @@ theInfo
 BuildGameInfo <- function(gamePage)
 {
     # extract boxscore info
-    theInfo <- str_extract_all(string=gamePage, pattern="\">[A-Za-z0-9 ]*</a> \\([0-9]+-[0-9]+-[0-9]+\\)</td><td align=\"right\">[0-9]{1,3}</td><td align=\"right\">[0-9]{1,3}</td><td align=\"right\">[0-9]{1,3}</td><td align=\"right\">[0-9]{1,3}</td><td align=\"right\">[0-9]{1,3}</td>(<td align=\"right\">[0-9]{1,3}</td>)*")[[1]]
+    theInfo <- str_extract_all(string=gamePage, pattern="\">[A-Za-z0-9. ]*</a> \\([0-9]+-[0-9]+-[0-9]+\\)</td><td align=\"right\">[0-9]{1,3}</td><td align=\"right\">[0-9]{1,3}</td><td align=\"right\">[0-9]{1,3}</td><td align=\"right\">[0-9]{1,3}</td><td align=\"right\">[0-9]{1,3}</td>(<td align=\"right\">[0-9]{1,3}</td>)*")[[1]]
     
     # get the teams
-    theTeams <- unlist(str_extract_all(string=theInfo, pattern=">[A-Za-z0-9 ]*</a>"))
+    theTeams <- unlist(str_extract_all(string=theInfo, pattern=">[A-Za-z0-9. ]*</a>"))
     # clean it up
     theTeams <- str_replace_all(string=theTeams, pattern=">|(</a>)", replacement="")
     
