@@ -1,5 +1,6 @@
 # EDA of Scores
 require(ggplot2)
+require(plyr)
 require(lubridate)
 require(reshape2)
 
@@ -18,7 +19,9 @@ allGames <- allGames[allGames$Season >= 1991, ]
 
 # histograms
 ggplot(data=allGames, aes(x=Final, fill=Home)) + geom_histogram() + facet_wrap(~Season) + opts(title="Distribution of Scores by Season", axis.text.x=theme_text(angle=90))
+ggplot(data=allGames, aes(x=Final%%10, fill=Home)) + geom_histogram() + facet_wrap(~Season) + opts(title="Distribution of Scores by Season", axis.text.x=theme_text(angle=90))
 ggplot(data=allGames, aes(x=Final%%10)) + geom_histogram() + facet_wrap(~Season) + opts(title="Distribution of Last Digit of Score by Season")
+ggplot(data=allGames, aes(x=Final%%10, fill=Home)) + geom_histogram(position=position_dodge(width=10)) + facet_wrap(~Season) + opts(title="Distribution of Last Digit of Score by Season")
 
 
 ### check just the giants
@@ -63,5 +66,16 @@ gamesWide <- ddply(allGames, .variables="X1", .fun=BuildWide)
 gamesWide$Winner <- ifelse(gamesWide$HomeFinal > gamesWide$AwayFinal, "Home", ifelse(gamesWide$HomeFinal < gamesWide$AwayFinal, "Away", "Tie"))
 head(gamesWide)
 
-ggplot(data=gamesWide, aes(x=AwayLast, y=HomeLast, colour=Winner)) + geom_point(position="jitter", alpha=1/2) + facet_wrap(~Season) + opts(title="Last Digit by Season")
+# This fluctuation plot is by far the most useful
+ggfluctuation(table(gamesWide$HomeLast, gamesWide$AwayLast), type="size") + labs(x="Away", y="Home") + opts(title="Distribution of Last Digit of Score")
+
+
+scoreDist <- ddply(gamesWide, .variables=c("HomeLast", "AwayLast", "Season"), length)
+scoreDist <- scoreDist[, c("HomeLast", "AwayLast", "V1", "Season")]
+head(scoreDist)
+ggfluctuation(scoreDist) + facet_wrap(~Season)
+ggstructure(gamesWide[, c("HomeLast", "AwayLast")])
+
+
+ggplot(data=gamesWide, aes(x=AwayLast, y=HomeLast, colour=Winner)) + geom_point(position="jitter", alpha=1/3) + facet_wrap(~Season) + opts(title="Last Digit by Season")
 ggplot(data=gamesWide[gamesWide$Season==2010, ], aes(x=AwayLast, y=HomeLast, colour=Winner)) + geom_point(position="jitter", alpha=1/2) + opts(title="Last Digit (2010)")
